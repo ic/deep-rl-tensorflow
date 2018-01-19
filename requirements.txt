@@ -1,0 +1,5 @@
+doom-py==0.0.15
+gym[all]==0.9.4
+scipy==1.0.0
+tensorflow==1.4.1
+tqdm==4.19.5
