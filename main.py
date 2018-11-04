@@ -66,8 +66,12 @@ flags.DEFINE_boolean('display', False, 'Whether to do display the game screen or
 flags.DEFINE_string('log_level', 'INFO', 'Log level [DEBUG, INFO, WARNING, ERROR, CRITICAL]')
 flags.DEFINE_integer('random_seed', 123, 'Value of random seed')
 flags.DEFINE_string('tag', '', 'The name of tag for a model, only for debugging')
-flags.DEFINE_string('allow_soft_placement', True, 'Whether to use part or all of a GPU')
+flags.DEFINE_boolean('allow_soft_placement', True, 'Whether to use part or all of a GPU')
 #flags.DEFINE_string('gpu_fraction', '1/1', 'idx / # of gpu fraction e.g. 1/3, 2/3, 3/3')
+
+# Internal
+# It is forbidden to set a flag that is not defined
+flags.DEFINE_string('data_format', 'NCHW', 'INTERNAL USED ONLY')
 
 def calc_gpu_fraction(fraction_string):
   idx, num = fraction_string.split('/')
@@ -145,6 +149,7 @@ def main(_):
                            name='target_network', trainable=False)
     elif conf.network_header_type == 'mlp':
       pred_network = MLPSmall(sess=sess,
+                              data_format=conf.data_format,
                               observation_dims=conf.observation_dims,
                               history_length=conf.history_length,
                               output_size=env.env.action_space.n,
@@ -152,6 +157,7 @@ def main(_):
                               network_output_type=conf.network_output_type,
                               name='pred_network', trainable=True)
       target_network = MLPSmall(sess=sess,
+                                data_format=conf.data_format,
                                 observation_dims=conf.observation_dims,
                                 history_length=conf.history_length,
                                 output_size=env.env.action_space.n,
